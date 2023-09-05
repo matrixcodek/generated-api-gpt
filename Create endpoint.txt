@@ -1,0 +1,83 @@
+Alright, let's tackle this in steps:
+
+1. Create an API endpoint named `form` which can accept 0 to 4 parameters.
+2. Create a controller that sends a request to another API, i.e., `https://restcountries.com/v3.1/all`.
+
+1. **API Endpoint for Form:**
+
+Let's create the `FormController` which contains the `form` endpoint:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+[Route("api/[controller]")]
+[ApiController]
+public class FormController : ControllerBase
+{
+    [HttpGet("form")]
+    public IActionResult Form(string param1 = null, int? param2 = null, string param3 = null, string param4 = null)
+    {
+        return Ok(new 
+        {
+            param1,
+            param2,
+            param3,
+            param4
+        });
+    }
+}
+```
+
+Here, we're making use of the default parameter values to accept 0 to 4 parameters.
+
+2. **Controller to make requests to another API:**
+
+We need to create a controller to make a GET request to `https://restcountries.com/v3.1/all`. For this, you can utilize `HttpClient`.
+
+First, remember to register `HttpClient` in the `Startup.cs`:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddHttpClient();
+    // ... other services
+}
+```
+
+Next, create the `CountriesController`:
+
+```csharp
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CountriesController : ControllerBase
+{
+    private readonly HttpClient _httpClient;
+
+    public CountriesController(IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient();
+    }
+
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllCountries()
+    {
+        var response = await _httpClient.GetAsync("https://restcountries.com/v3.1/all");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            return Ok(content);
+        }
+
+        return BadRequest($"Error: {response.ReasonPhrase}");
+    }
+}
+```
+
+This controller has a method `GetAllCountries` that sends a GET request to the specified URL and returns the results.
+
+Now, when you run your application, you can call the `/api/form` endpoint with the desired parameters, and the `/api/countries/all` endpoint to get a list of all countries. Make sure to have necessary error handling and exception handling in place, and adjust the API endpoints as per your requirements.
