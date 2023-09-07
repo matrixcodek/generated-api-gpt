@@ -5,15 +5,13 @@ namespace api_gpt.Services
   public class CountryService : ICountryService
   {
     private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-
+    
     private readonly string _restCountriesURL;
-    private CountriesDto _countriesDto;
+    private readonly CountriesDto _countriesDto;
     public CountryService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
-      _configuration = configuration;
       _httpClient = httpClientFactory.CreateClient();
-      _restCountriesURL = _configuration.GetValue<string>("RestCountriesURL") ?? "";
+      _restCountriesURL = configuration.GetValue<string>("RestCountriesURL") ?? "";
       _countriesDto = new CountriesDto();
     }
 
