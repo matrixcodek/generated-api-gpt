@@ -1,34 +1,24 @@
-using System.Net.Http;
-using System.Threading.Tasks;
+using api_gpt.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
-[Route("api/[controller]")]
-[ApiController]
-public class CountriesController : ControllerBase
+namespace api_gpt.Controllers
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-
-    public CountriesController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CountriesController : ControllerBase
     {
-        _httpClient = httpClientFactory.CreateClient();
-        _configuration = configuration;
-    }
+        private readonly ICountryService _countryService;
 
-    [HttpGet("")]
-    public async Task<IActionResult> GetAllCountries(string? param1 = null, int? param2 = null, string? param3 = null, string? param4 = null)
-    {
-        var URL = _configuration.GetValue<string>("RestCountriesURL");
-        Console.WriteLine($"Vamos a ver la URL: {URL}");
-        var response = await _httpClient.GetAsync(URL);
-
-        if (response.IsSuccessStatusCode)
+        public CountriesController(ICountryService countryService)
         {
-            var content = await response.Content.ReadAsStringAsync();
-            return Ok(content);
+            _countryService = countryService;
         }
 
-        return BadRequest($"Error: {response.ReasonPhrase}");
+        [HttpGet("")]
+        public async Task<IActionResult> GetAllCountries(string? countryName = null, int? param2 = null, string? param3 = null, string? param4 = null)
+        {
+            return Ok(await _countryService.GetAllCountries(countryName));
+        }
     }
+
 }

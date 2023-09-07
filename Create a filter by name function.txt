@@ -1,0 +1,57 @@
+User
+Create a model en C# for this structure:
+{
+    "name": {
+      "common": "United States",
+      "official": "United States of America",
+      "nativeName": {
+        "eng": {
+          "official": "United States of America",
+          "common": "United States"
+        }
+      }
+    }
+  }
+ChatGPT
+You can represent the given structure using C# classes as follows:
+
+csharp
+Copy code
+public class Country
+{
+    public Name name { get; set; }
+}
+
+public class Name
+{
+    public string common { get; set; }
+    public string official { get; set; }
+    public Dictionary<string, NativeName> nativeName { get; set; }
+}
+
+public class NativeName
+{
+    public string official { get; set; }
+    public string common { get; set; }
+}
+
+// Usage example
+var usa = new Country
+{
+    name = new Name
+    {
+        common = "United States",
+        official = "United States of America",
+        nativeName = new Dictionary<string, NativeName>
+        {
+            {
+                "eng", new NativeName
+                {
+                    official = "United States of America",
+                    common = "United States"
+                }
+            }
+        }
+    }
+};
+In this model, I'm using a dictionary for nativeName to allow for flexibility, as it seems that you might have more languages in the future. If there's only ever going to be the "eng" language, you could also just use a property instead of a dictionary.
