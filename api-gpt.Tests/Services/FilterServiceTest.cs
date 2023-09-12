@@ -7,14 +7,7 @@ namespace api_gpt.Tests.Services
     public class FilterServiceTest
     {
 
-        [TestMethod]
-        public void FilterCountriesByName_WhenCountryNameIsNull_ShouldReturnTheSameCountries()
-        {
-            // Arrenge
-
-            //Act
-        }
-
+       
         private List<CountryDto> _sampleCountries = new List<CountryDto>();
 
         [TestInitialize]
@@ -22,11 +15,20 @@ namespace api_gpt.Tests.Services
         {
             _sampleCountries = new List<CountryDto>
             {
-                new CountryDto(name: "CountryA", population: 2_000_000 ),
-                new CountryDto(name: "CountryB", population: 8_000_000 ),
-                new CountryDto(name: "CountryC", population: 15_000_000)
+                new(name: "CountryA", population: 2_000_000 ),
+                new(name: "CountryB", population: 8_000_000 ),
+                new(name: "CountryC", population: 15_000_000)
             };
         }
+
+        [TestMethod]
+        public void FilterCountriesByName_WhenCountryNameIsNull_ShouldReturnTheSameCountries()
+        {
+            var result = _sampleCountries.AsQueryable().FilterCountriesByName();
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual("CountryA", result.First().Name);
+        }
+
 
         [TestMethod]
         public void FilterCountriesByName_ValidName_ReturnsFilteredCountries()
@@ -68,7 +70,6 @@ namespace api_gpt.Tests.Services
         public void Paginate_ValidPagination_ReturnsPaginatedResults()
         {
             var result = _sampleCountries.AsQueryable().Paginate(1, 2);
-
             Assert.AreEqual(2, result.Count); // 2 items per page
             Assert.AreEqual("CountryA", result.First().Name);
         }
