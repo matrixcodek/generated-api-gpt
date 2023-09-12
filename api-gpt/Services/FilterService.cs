@@ -29,9 +29,9 @@ namespace api_gpt.Services
         {
             if (string.IsNullOrEmpty(sortBy)) return countries;
             
-            if(Enum.TryParse(sortBy,true,out SortByEnum result))
+            if(Enum.TryParse(sortBy,true,out TypeSortBy result))
             {
-                if(result == SortByEnum.ASCEND) 
+                if(result == TypeSortBy.ASCEND) 
                 {
                     countries = countries.OrderBy(x => x.Name);
                 }

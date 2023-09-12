@@ -1,6 +1,6 @@
 namespace api_gpt.Enums;
 
-public enum SortByEnum 
+public enum TypeSortBy 
 {
   ASCEND,
   DESCEND
