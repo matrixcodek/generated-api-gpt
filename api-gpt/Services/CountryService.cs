@@ -5,15 +5,15 @@ namespace api_gpt.Services
 {
   public class CountryService : ICountryService
   {
-    private readonly HttpClient _httpClient;
+    private readonly IRequestHttpService _requestHttpService;
     
     private readonly string _restCountriesURL;
     private readonly CountriesDto _countriesDto;
-    public CountryService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public CountryService(IRequestHttpService requestHttpService, IConfiguration configuration)
     {
-      _httpClient = httpClientFactory.CreateClient();
-      _restCountriesURL = configuration.GetValue<string>("RestCountriesURL") ?? "";
-      _countriesDto = new CountriesDto();
+        _requestHttpService = requestHttpService;
+        _restCountriesURL = configuration.GetValue<string>("RestCountriesURL") ?? "";
+        _countriesDto = new CountriesDto();
     }
 
     public async Task<PagedList<CountryDto>> GetAllCountries(QueryParameters queryParameters)
@@ -29,14 +29,9 @@ namespace api_gpt.Services
 
     private async Task RequestCountries()
     {
-      var URL = GetURL();
-      var response = await _httpClient.GetAsync(URL);
-
-      if (response.IsSuccessStatusCode)
-      {
-        var content = await response.Content.ReadAsStringAsync();
-        _countriesDto.SetCountriesDto(content);
-      }
+        var URL = GetURL();
+        var response = await _requestHttpService.GetAsync(URL);
+        _countriesDto.SetCountriesDto(response);
     }
 
     private string GetURL(string? fields = null)
