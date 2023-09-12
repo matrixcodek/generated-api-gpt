@@ -15,9 +15,9 @@ namespace api_gpt.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> GetAllCountries(string? countryName = null, int? param2 = null, string? param3 = null, string? param4 = null)
+        public async Task<IActionResult> GetAllCountries(string? countryName = null, int? population = null, string? param3 = null, string? param4 = null)
         {
-            return Ok(await _countryService.GetAllCountries(countryName));
+            return Ok(await _countryService.GetAllCountries(countryName, population));
         }
     }
 
