@@ -1,4 +1,5 @@
 ﻿using api_gpt.DTOs;
+using api_gpt.Enums;
 using api_gpt.Helpers;
 
 namespace api_gpt.Services
