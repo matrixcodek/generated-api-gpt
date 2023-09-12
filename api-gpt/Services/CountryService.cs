@@ -1,4 +1,5 @@
 using api_gpt.DTOs;
+using api_gpt.Helpers;
 
 namespace api_gpt.Services
 {
@@ -15,16 +16,15 @@ namespace api_gpt.Services
       _countriesDto = new CountriesDto();
     }
 
-    public async Task<List<CountryDto>> GetAllCountries(string? countryName = null, int? population = null, string? sortBy = null)
+    public async Task<PagedList<CountryDto>> GetAllCountries(QueryParameters queryParameters)
     {
-      if (!_countriesDto.Countries.Any()) await RequestCountries();
-      return FilterCountries(countryName, population, sortBy);
-    }
+        if (!_countriesDto.Countries.Any()) await RequestCountries();
 
-    private List<CountryDto> FilterCountries(string? countryName = null, int? population = null, string? sortBy = null)
-    {
-      var countries = _countriesDto.Countries.ToList();
-      return countries.FilterCountriesByName(countryName).FilterCountriesByPopulation(population);
+        var countries = _countriesDto.Countries.AsQueryable();
+        return countries.FilterCountriesByName(queryParameters.CountryName)
+                .FilterCountriesByPopulation(queryParameters.Population)
+                .SortBy(queryParameters.SortBy)
+                .Paginate(queryParameters.PageNumber, queryParameters.PageSize);
     }
 
     private async Task RequestCountries()

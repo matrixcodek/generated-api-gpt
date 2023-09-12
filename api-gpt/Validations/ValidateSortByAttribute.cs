@@ -8,7 +8,7 @@ namespace api_gpt.Validations
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if(value?.ToString()?.ToLower() == "ascend" || value?.ToString()?.ToLower() == "descend")
+            if(string.IsNullOrEmpty((string?)value) || value?.ToString()?.ToLower() == "ascend" || value?.ToString()?.ToLower() == "descend")
             {
                 return ValidationResult.Success;
             }

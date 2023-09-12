@@ -1,9 +1,10 @@
 using api_gpt.DTOs;
+using api_gpt.Helpers;
 
 namespace api_gpt.Services
 {
   public interface ICountryService
   {
-    Task<List<CountryDto>> GetAllCountries(string? countryName = null, int? population = null, string? sortBy = null);
+    Task<PagedList<CountryDto>> GetAllCountries(QueryParameters queryParameters);
   }
 }

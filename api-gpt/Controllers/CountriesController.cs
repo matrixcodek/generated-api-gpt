@@ -1,6 +1,7 @@
 using api_gpt.DTOs;
 using api_gpt.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace api_gpt.Controllers
 {
@@ -18,14 +19,20 @@ namespace api_gpt.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllCountries([FromQuery] QueryParameters queryParameters)
         {
-            return Ok(await _countryService.GetAllCountries(queryParameters.CountryName, queryParameters.Population, queryParameters.SortBy));
-        }
+            var countries = await _countryService.GetAllCountries(queryParameters);
+            var paginationMetadata = new
+            {
+                totalCount = countries.Count,
+                pageSize = countries.PageSize,
+                currentPage = countries.CurrentPage,
+                totalPages = countries.TotalPages,
+            };
 
-        // [HttpGet("")]
-        // public async Task<IActionResult> GetAllCountries(string? countryName = null, int? population = null, string? sortBy = null, string? param4 = null)
-        // {
-        //     return Ok(await _countryService.GetAllCountries(countryName, population, sortBy));
-        // }
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            
+            return Ok(countries);
+        }
+        
     }
 
 }
