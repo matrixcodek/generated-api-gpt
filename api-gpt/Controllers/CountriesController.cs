@@ -1,3 +1,4 @@
+using api_gpt.DTOs;
 using api_gpt.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +16,16 @@ namespace api_gpt.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> GetAllCountries(string? countryName = null, int? population = null, string? param3 = null, string? param4 = null)
+        public async Task<IActionResult> GetAllCountries([FromQuery] QueryParameters queryParameters)
         {
-            return Ok(await _countryService.GetAllCountries(countryName, population));
+            return Ok(await _countryService.GetAllCountries(queryParameters.CountryName, queryParameters.Population, queryParameters.SortBy));
         }
+
+        // [HttpGet("")]
+        // public async Task<IActionResult> GetAllCountries(string? countryName = null, int? population = null, string? sortBy = null, string? param4 = null)
+        // {
+        //     return Ok(await _countryService.GetAllCountries(countryName, population, sortBy));
+        // }
     }
 
 }

@@ -22,5 +22,24 @@ namespace api_gpt.Services
             }
             return countries;
         }
+
+        public static List<CountryDto> SortBy(this List<CountryDto> countries, string? sortBy)
+        {
+            if (string.IsNullOrEmpty(sortBy)) return countries;
+            
+            if(Enum.TryParse(sortBy,true,out SortByEnum result))
+            {
+                if(result == SortByEnum.ASCEND) 
+                {
+                    countries = countries.OrderBy(x => x.Name).ToList();
+                }
+                else 
+                {
+                    countries = countries.OrderByDescending(x => x.Name).ToList();
+                }
+            }
+    
+            return countries;
+        }
     }
 }

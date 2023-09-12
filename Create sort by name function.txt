@@ -1,0 +1,48 @@
+User
+restrict in the C# method that the values allowed in the API in the query string for the sortBy parameter can only be: "ascend" or "descend".
+ChatGPT
+To restrict the values for the sortBy parameter in the query string to only allow "ascend" or "descend", you can use model validation in your C# Web API.
+
+Here is a simple example using ASP.NET Core:
+
+First, create a custom validation attribute:
+csharp
+Copy code
+using System.ComponentModel.DataAnnotations;
+
+public class ValidSortOrderAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        string sortOrder = value as string;
+
+        if (sortOrder != "ascend" && sortOrder != "descend")
+        {
+            return new ValidationResult("Invalid sort order. Allowed values are 'ascend' and 'descend'.");
+        }
+
+        return ValidationResult.Success;
+    }
+}
+Then, in your model or DTO, apply this attribute to the sortBy property:
+csharp
+Copy code
+public class QueryParameters
+{
+    [ValidSortOrder]
+    public string sortBy { get; set; }
+}
+In your API action, use this model or DTO as a parameter:
+csharp
+Copy code
+[HttpGet]
+public IActionResult GetItems([FromQuery] QueryParameters parameters)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    // your logic here
+}
+With this setup, when a request comes in with a sortBy value other than "ascend" or "descend", the model state will be invalid. You can then respond with a bad request containing the validation error message.

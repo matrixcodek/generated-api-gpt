@@ -15,13 +15,13 @@ namespace api_gpt.Services
       _countriesDto = new CountriesDto();
     }
 
-    public async Task<List<CountryDto>> GetAllCountries(string? countryName = null, int? population = null)
+    public async Task<List<CountryDto>> GetAllCountries(string? countryName = null, int? population = null, string? sortBy = null)
     {
       if (!_countriesDto.Countries.Any()) await RequestCountries();
-      return FilterCountries(countryName, population);
+      return FilterCountries(countryName, population, sortBy);
     }
 
-    private List<CountryDto> FilterCountries(string? countryName = null, int? population = null)
+    private List<CountryDto> FilterCountries(string? countryName = null, int? population = null, string? sortBy = null)
     {
       var countries = _countriesDto.Countries.ToList();
       return countries.FilterCountriesByName(countryName).FilterCountriesByPopulation(population);
