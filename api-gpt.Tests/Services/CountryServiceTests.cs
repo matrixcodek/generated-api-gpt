@@ -7,15 +7,15 @@ using System.Text.Json;
 
 namespace api_gpt.Tests.Services
 {
-    [TestClass]
-    public class CountryServiceTest
+    [TestClass()]
+    public class CountryServiceTests
     {
 
         private Mock<IRequestHttpService> _mockRequestHttpService;
         private IConfiguration _configuration;
         private CountryService _countryService;
 
-        public CountryServiceTest()
+        public CountryServiceTests()
         {
             var inMemorySettings = new Dictionary<string, string?> {
                 {"RestCountriesURL", "https://fakeapi.com"}
@@ -31,7 +31,7 @@ namespace api_gpt.Tests.Services
         }
 
 
-        [TestMethod]
+        [TestMethod()]
         public async Task GetAllCountries_WithNoCountriesInStore_ShouldRequestCountries()
         {
             // Arrange

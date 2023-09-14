@@ -4,7 +4,7 @@ using api_gpt.Services;
 namespace api_gpt.Tests.Services
 {
     [TestClass]
-    public class FilterServiceTest
+    public class FilterServiceTests
     {
 
        
