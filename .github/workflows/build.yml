@@ -45,8 +45,7 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"matrixcodek_generated-api-gpt" /o:"matrixcodek" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet tool install --global dotnet-coverage
-          dotnet build .\api-gpt\
-          dotnet build .\api-gpt.Tests\
-          dotnet test .\api-gpt\ 
-          dotnet-coverage collect "dotnet test .\api-gpt\" -f xml -o "coverage.xml"
+          dotnet build 
+          dotnet test 
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
